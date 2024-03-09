@@ -1,6 +1,8 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import multer from 'multer'
+import { configDotenv } from "dotenv";
+configDotenv()
 
 import {createPostValidation} from "./validations/posts.js";
 import { UserController, PostController } from "./controllers/index.js";
@@ -50,7 +52,7 @@ app.post('/posts', checkAuth, createPostValidation, handleValidationErrors, Post
 app.delete('/posts/:id', checkAuth, PostController.removePost)
 app.patch ('/posts/:id', checkAuth, handleValidationErrors, PostController.updatePost)
 
-app.listen(4444, (e) => {
+app.listen(process.env.PORT || 4444, (e) => {
     if(e){
         return console.log(e)
     }
