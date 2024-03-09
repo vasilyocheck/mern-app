@@ -35,6 +35,8 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage})
 
+app.get("/", (req, res) => res.send("Express on Vercel"));
+
 app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
     res.json({
         url: `/uploads/${req.file.originalname}`
