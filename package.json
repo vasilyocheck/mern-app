@@ -9,8 +9,7 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
-    "build": "webpack"
+    "start:dev": "nodemon index.js"
   },
   "keywords": [
     "family"
