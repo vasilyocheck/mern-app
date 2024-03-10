@@ -4,13 +4,12 @@
   "description": "family-network",
   "main": "index.js",
   "engines": {
-    "node": "14.x"
+    "node": "20.x"
   },
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
-    "build": "webpack"
+    "start:dev": "nodemon index.js"
   },
   "keywords": [
     "family"
