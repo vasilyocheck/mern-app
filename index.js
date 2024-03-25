@@ -10,6 +10,7 @@ import {login} from "./controllers/user-controller.js";
 import handleValidationErrors from "./utils/handle-validation-errors.js";
 import checkAuth from "./utils/check-auth.js";
 import {loginValidation, signUpValidation} from "./validations/auth.js";
+import nodemailer from "nodemailer";
 
 mongoose.connect(process.env.MONGODB_URI)
     .then(() => {
@@ -54,6 +55,33 @@ app.post('/posts', checkAuth, createPostValidation, handleValidationErrors, Post
 app.delete('/posts/:id', checkAuth, PostController.removePost)
 app.patch ('/posts/:id', checkAuth, handleValidationErrors, PostController.updatePost)
 
+app.post('/send-email', (req, res) => {
+    const { name, subject, message } = req.body;
+    const transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.PASS
+        }
+    })
+
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: process.env.EMAIL,
+        subject: subject,
+        name,
+        message
+    }
+    transporter.sendMail(mailOptions, (error, info) => {
+        if(error){
+            console.log(error);
+            res.status(500).send('Error sending Email')
+        } else {
+            console.log('Email sent: ' + info.response);
+            res.status(200).send('Email sent successfully')
+        }
+    })
+})
 app.listen(process.env.PORT || 4444, (e) => {
     if(e){
         return console.log(e)
