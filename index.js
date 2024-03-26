@@ -66,8 +66,8 @@ app.post('/send-email', (req, res) => {
         secure: true,
         pull: true,
         auth: {
-            user: process.env.EMAIL, // ваш email на mail.ru
-            pass: process.env.PASS // ваш пароль от email
+            user: process.env.EMAIL,
+            pass: process.env.PASS
         },
         tls: {
             rejectUnauthorized: false
