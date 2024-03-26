@@ -94,7 +94,6 @@ app.post('/send-email', (req, res) => {
             res.status(200).send('Email sent successfully');
         }
     });
-    console.log('Check status')
 });
 app.listen(process.env.PORT || 4444, (e) => {
     if(e){
