@@ -2,6 +2,7 @@ import express from 'express'
 import mongoose from 'mongoose'
 import multer from 'multer'
 import { configDotenv } from "dotenv";
+import bodyParser from "body-parser";
 configDotenv()
 
 import {createPostValidation} from "./validations/posts.js";
@@ -24,6 +25,7 @@ const app = express()
 
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
+app.use(bodyParser.json());
 
 const storage = multer.diskStorage({
     destination: (_, __, cb) => {
@@ -57,31 +59,39 @@ app.patch ('/posts/:id', checkAuth, handleValidationErrors, PostController.updat
 
 app.post('/send-email', (req, res) => {
     const { name, subject, message } = req.body;
+
     const transporter = nodemailer.createTransport({
-        service: 'Gmail',
+        host: 'smtp.mail.ru',
+        port: 465,
+        secure: true,
+        pull: true,
         auth: {
-            user: process.env.EMAIL,
-            pass: process.env.PASS
+            user: process.env.EMAIL, // ваш email на mail.ru
+            pass: process.env.PASS // ваш пароль от email
         }
-    })
+    });
 
     const mailOptions = {
         from: process.env.EMAIL,
         to: process.env.EMAIL,
         subject: subject,
-        name,
-        message
-    }
+        html: `
+            <p>From ${name}</p>
+            <p>Subject: ${subject}</p>
+            <p>Message: ${message}</p>
+        `
+};
+
     transporter.sendMail(mailOptions, (error, info) => {
-        if(error){
+        if (error) {
             console.log(error);
-            res.status(500).send('Error sending Email')
+            res.status(500).send('Error sending Email');
         } else {
             console.log('Email sent: ' + info.response);
-            res.status(200).send('Email sent successfully')
+            res.status(200).send('Email sent successfully');
         }
-    })
-})
+    });
+});
 app.listen(process.env.PORT || 4444, (e) => {
     if(e){
         return console.log(e)
