@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import multer from 'multer'
 import { configDotenv } from "dotenv";
 import bodyParser from "body-parser";
+import cors from 'cors'
 configDotenv()
 
 import {createPostValidation} from "./validations/posts.js";
@@ -26,6 +27,11 @@ const app = express()
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 app.use(bodyParser.json());
+app.use(cors({
+    origin: 'http://localhost:5173'
+}))
+
+app.options('/send-email', cors());
 
 const storage = multer.diskStorage({
     destination: (_, __, cb) => {
